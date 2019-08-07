@@ -19,13 +19,16 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 public class JdbcTimeEntryRepository implements TimeEntryRepository {
     DataSource dataSource;
     private TimeEntryRepository subject;
-    private final RowMapper<TimeEntry> mapper = (rs, rowNum) -> new TimeEntry(
-            rs.getLong("id"),
-            rs.getLong("project_id"),
-            rs.getLong("user_id"),
-            rs.getDate("date").toLocalDate(),
-            rs.getInt("hours")
-    );
+    private final RowMapper<TimeEntry> mapper = (rs, rowNum) -> {
+        return new TimeEntry(
+                rs.getLong("id"),
+                rs.getLong("project_id"),
+                rs.getLong("user_id"),
+                rs.getDate("date").toLocalDate(),
+                rs.getInt("hours")
+
+        );
+    };
     private final ResultSetExtractor<TimeEntry> extractor =
             (rs) -> rs.next() ? mapper.mapRow(rs,1) : null;
     ResultSetExtractor<List<TimeEntry>> extractorList=(rs) -> {int i=0;
